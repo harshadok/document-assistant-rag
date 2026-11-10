@@ -1,0 +1,5 @@
+[
+  {"question": "How many paid vacation days do employees get?", "expected_text": "24 days"},
+  {"question": "How much can I reimburse for my home office?", "expected_text": "15,000"},
+  {"question": "Which weekdays can I work from home?", "expected_text": "Tuesdays and Thursdays"}
+]

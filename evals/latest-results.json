@@ -1,0 +1,31 @@
+{
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "cases": [
+    {
+      "question": "How many paid vacation days do employees get?",
+      "expected_text_found_in_top_2": true,
+      "scores": [
+        0.523,
+        0.369
+      ]
+    },
+    {
+      "question": "How much can I reimburse for my home office?",
+      "expected_text_found_in_top_2": true,
+      "scores": [
+        0.5875
+      ]
+    },
+    {
+      "question": "Which weekdays can I work from home?",
+      "expected_text_found_in_top_2": true,
+      "scores": [
+        0.5409
+      ]
+    }
+  ],
+  "pass_count": 3,
+  "total": 3,
+  "token_budget_and_coverage_check": "passed",
+  "scope": "Tiny synthetic retrieval smoke evaluation; not an answer-quality benchmark."
+}

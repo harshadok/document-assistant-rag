@@ -8,3 +8,7 @@ __pycache__/
 .dart_tool/
 build/
 .DS_Store
+
+data/
+.pytest_cache/
+*.pyc

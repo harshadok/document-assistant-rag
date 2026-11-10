@@ -1,0 +1,14 @@
+Northwind Studio — Synthetic Employee Handbook
+
+Annual leave
+Full-time employees receive 24 days of paid annual leave each calendar year.
+Leave requests should be submitted through the staff portal at least 7 days before the planned absence.
+
+Equipment allowance
+Employees can claim up to INR 15,000 each year for approved home office equipment.
+An itemised invoice and manager approval are required for reimbursement.
+
+Remote work
+Employees may work remotely on Tuesdays and Thursdays. Other remote work days require manager approval.
+
+This handbook is fictional and exists only for development and evaluation.
