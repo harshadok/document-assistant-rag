@@ -2,7 +2,7 @@
 
 A personal AI/mobile engineering project by [Harshad Odakkal](https://github.com/harshadok).
 
-**Current milestone: runnable local document retrieval API and Flutter client.** Upload a text document or text PDF, persist its semantic embeddings, ask a question, and inspect the retrieved passages with page references. Optional local LLM generation is integrated through Ollama. There is no cloud inference dependency or paid API key requirement.
+**Current milestone: runnable local document retrieval API and Flutter client.** Upload a text document or text PDF, persist its semantic embeddings, ask a question, and inspect the retrieved passages with page references. Local LLM generation is integrated and smoke-tested through Ollama. There is no cloud inference dependency or paid API key requirement.
 
 ## What is implemented
 
@@ -68,12 +68,12 @@ flutter run --dart-define=API_BASE_URL=http://YOUR_SERVER:8000
 
 A physical phone cannot use your computer's `127.0.0.1`. Physical-device LAN networking, signing, and file-picker behaviour still require device testing. This prototype is single-user and has no authentication: keep the backend bound to localhost during normal development. Do not expose it publicly or put private documents into a shared server.
 
-## Optional local answer generation
+## Local answer generation
 
-Install Ollama separately, download a model suitable for your computer, and ensure its local server is running. Then start this API with the exact name of an installed model:
+Install [Ollama](https://ollama.com/download), run `ollama serve`, and download the tested model with `ollama pull qwen2.5:1.5b`. The start script selects this model by default; you can override `OLLAMA_MODEL`. Then start this API with the exact name of an installed model:
 
 ```sh
-export OLLAMA_MODEL='YOUR_INSTALLED_MODEL_NAME'
+export OLLAMA_MODEL='qwen2.5:1.5b'
 # Optional; this is already the default:
 export OLLAMA_BASE_URL='http://127.0.0.1:11434'
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
@@ -81,7 +81,7 @@ python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 
 Turn on **Generate an answer with local AI** in the client, or pass `"generate":true` to `/questions`. No automatic model download is performed for Ollama. Without `OLLAMA_MODEL`, requesting generation returns a clear 503 error. Invalid model output or an unavailable local model returns 502.
 
-The model is instructed to answer from source passages and return citation IDs. Citation validation only confirms that IDs exist; it does **not** prove that the answer is faithful. Review answers against the displayed evidence. Document prompt injection and hallucinations remain possible. No real Ollama inference result is claimed unless separately recorded in evaluation results.
+The model returns citation IDs and exact supporting quotes. Validation checks that every cited source exists and each supporting quote occurs in that source. These checks do **not** prove that the answer is entailed by its evidence. Review answers against the displayed evidence. Document prompt injection and hallucinations remain possible. A live check with Qwen2.5 1.5B returned the synthetic handbook answer with a validated supporting quote; see `VERIFICATION.md`.
 
 ## API
 
@@ -110,12 +110,12 @@ The API tests use deterministic embedding doubles to isolate correctness. `pytho
 
 ## Verified development results
 
-- Backend test suite: **8 passed**.
+- Backend test suite: **10 passed**.
 - Real embedding model: **3/3 synthetic retrieval smoke cases passed** after paragraph-aware chunking; token-budget and text-coverage checks passed. See [recorded results](evals/latest-results.json).
 - Flutter analysis: **no issues found**.
 - Flutter evidence-view widget test: **passed**.
 - Native macOS debug build: **succeeded**.
-- Actual Ollama answer generation and physical mobile-device operation: **not tested in this session**.
+- Actual Ollama answer generation: **passed a synthetic source-grounded answer check**. Physical mobile-device operation remains untested.
 
 These checks establish a working development baseline, not production readiness or a general accuracy benchmark.
 

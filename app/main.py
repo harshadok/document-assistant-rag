@@ -36,6 +36,11 @@ def create_app(database=None, embedder=None):
     app = FastAPI(title="Document Assistant", version="0.1.0", lifespan=lifespan,
                   description="Single-user local prototype. Semantic retrieval with optional local Ollama generation.")
 
+    @app.get('/', include_in_schema=False)
+    def index():
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse('/docs')
+
     @app.get("/health")
     def health():
         return {"status": "ready", "embedding_model": app.state.service.embedder.name,

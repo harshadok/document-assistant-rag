@@ -147,3 +147,19 @@ def test_generated_answer_and_model_failure(client, monkeypatch):
         assert response.json()["mode"] == "generated"
     with patch("app.main.generate_with_ollama", side_effect=OSError("offline")):
         assert client.post("/questions", json={"question": "leave", "generate": True}).status_code == 502
+
+
+def test_fabricated_evidence_is_rejected():
+    from io import BytesIO
+    fake = {'message': {'content': json.dumps({'answer': '24 days', 'citations': ['S1'], 'evidence': [{'source_id': 'S1', 'quote': 'A fabricated supporting passage'}]})}}
+    with patch('urllib.request.urlopen', return_value=BytesIO(json.dumps(fake).encode())):
+        with pytest.raises(ValueError, match='does not occur'):
+            generate_with_ollama('leave?', [{'citation_id': 'S1', 'text': 'Annual leave is 24 days.'}], 'fake', 'http://localhost')
+
+
+def test_valid_generated_evidence_passes():
+    from io import BytesIO
+    fake = {'message': {'content': json.dumps({'answer': '24 days', 'citations': ['S1'], 'evidence': [{'source_id': 'S1', 'quote': 'Annual leave is 24 days.'}]})}}
+    with patch('urllib.request.urlopen', return_value=BytesIO(json.dumps(fake).encode())):
+        result = generate_with_ollama('leave?', [{'citation_id': 'S1', 'text': 'Annual leave is 24 days.'}], 'fake', 'http://localhost')
+        assert result['citations'] == ['S1']
